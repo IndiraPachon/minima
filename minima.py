@@ -1,7 +1,22 @@
+#Importar las librerías
 import xarray as xr
 import numpy as np
+#Definir las funciones necesatias para el algoritmo
+def isin(element, test_elements, assume_unique=False, invert=False):
+    "definiendo la función isin de numpy para la versión anterior a la 1.13, en la que no existe"
+    element = np.asarray(element)
+    return np.in1d(element, test_elements, assume_unique=assume_unique,
+                invert=invert).reshape(element.shape)
 nbar = xarr0
 nodata=-9999
+#Máscara de nubes
+validValues=set()
+if product=="LS7_ETM_LEDAPS":
+    validValues=[66,68,130,132]
+elif product == "LS8_OLI_LASRC":
+    validValues=[322, 386, 834, 898, 1346, 324, 388, 836, 900, 1348]
+cloud_mask=isin(nbar["pixel_qa"].values, validValues)
+
 minima={} 
 for band in bands:
     #Por cada banda, aplicar la máscara de nubes y cambiar el valor de nodata por np.nan
@@ -19,6 +34,7 @@ for band in bands:
     #Eliminar los valores que no cumplen con el número mínimo de pixeles válidos dado. 
     minima[band][np.sum(allNan,0)<minValid]=np.nan
 del datos
+
 import xarray as xr
 ncoords=[]
 xdims =[]
