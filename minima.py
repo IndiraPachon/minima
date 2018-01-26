@@ -1,3 +1,5 @@
+import xarray as xr
+import numpy as np
 minima={} 
 for band in bands:
     #Por cada banda, aplicar la máscara de nubes y cambiar el valor de nodata por np.nan
